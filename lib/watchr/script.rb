@@ -261,7 +261,7 @@ module Watchr
     #   rules corresponding to `path`
     #
     def rules_for(path)
-      @rules.reverse.select {|rule| path.match(rule.pattern) }
+      (@precedence == :last_match ? @rules.reverse : @rules).select{ |rule| path.match(rule.pattern) }
     end
 
     # Make a path relative to current working directory.
