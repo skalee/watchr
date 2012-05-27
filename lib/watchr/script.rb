@@ -11,6 +11,7 @@ module Watchr
 
     # @private
     DEFAULT_EVENT_TYPE = :modified
+    DEFAULT_VERBOSITY = :quiet
 
     # Convenience type. Provides clearer and simpler access to rule properties.
     #
@@ -20,7 +21,7 @@ module Watchr
     #     rule.pattern      #=> 'lib/.*\.rb'
     #     rule.action.call  #=> 'ohaie'
     #
-    Rule = Struct.new(:pattern, :event_type, :action)
+    Rule = Struct.new(:pattern, :event_type, :verbosity, :action)
 
     # Script file evaluation context
     #
@@ -121,7 +122,10 @@ module Watchr
     #   Defaults to `:modified`.
     #
     #   :verbosity =>
-    #   not implemented yet.
+    #   apart from executing action, changed files may be listed on stdout.
+    #   Accepted values are `:quiet` (no additional output, only stacktraces
+    #   when something fail) and `:loud` (list all changes files).
+    #   Defaults to `:quiet`.
     #
     # @yield
     #   action to trigger
@@ -129,7 +133,7 @@ module Watchr
     # @return [Rule]
     #
     def watch(pattern, options = {}, &action)
-      @rules << Rule.new(pattern, (options[:type] || DEFAULT_EVENT_TYPE), action || @default_action)
+      @rules << Rule.new(pattern, (options[:type] || DEFAULT_EVENT_TYPE), (options[:verbosity] || DEFAULT_VERBOSITY), action || @default_action)
       @rules.last
     end
 
@@ -205,6 +209,7 @@ module Watchr
       path = rel_path(path).to_s
       rule = rules_for(path).detect {|rule| rule.event_type.nil? || rule.event_type == event_type }
       if rule
+        puts "%s\t%s" % [Time.now.strftime('%H:%M'), path] if rule.verbosity == :loud
         data = path.match(rule.pattern)
         lambda { rule.action.call(data) }
       else
