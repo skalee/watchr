@@ -12,6 +12,7 @@ module Watchr
     # @private
     DEFAULT_EVENT_TYPE = :modified
     DEFAULT_VERBOSITY = :quiet
+    DEFAULT_PRECEDENCE = :last_match
 
     # Convenience type. Provides clearer and simpler access to rule properties.
     #
@@ -80,6 +81,18 @@ module Watchr
       @rules = []
       @default_action = Proc.new {}
       @ec = EvalContext.new(self)
+      @precedence = DEFAULT_PRECEDENCE
+    end
+
+    # Sets the order in which rules are matched
+    # @param [Symbol] prec
+    #   may take two values: `:first_match` and `:last_match`.  When `:first_match`
+    #   is set the first-defined rules take precedence over other rules.  In the
+    #   opposite situation the last-matching rule is evaluated.  Defaults to
+    #   `:last_match`.
+    def precedence(precedence)
+      raise(ArgumentError, ":precedence must be one of those: :first_match, :last_match") unless [:last_match, :first_match].inlcude?(precedence)
+      @precedence = precedence
     end
 
     # Main script API method. Builds a new rule, binding a pattern to an action.

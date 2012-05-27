@@ -14,7 +14,7 @@ require 'rbconfig'
 #
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 module Watchr
-  VERSION = '0.7'
+  VERSION = '0.99'
 
   begin
     require 'fsevent'

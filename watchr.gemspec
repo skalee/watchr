@@ -1,7 +1,7 @@
 require 'lib/watchr'
 
 Gem::Specification.new do |s|
-  s.name                = "watchr"
+  s.name                = "watchr-improved"
   s.summary             = "Modern continuous testing (flexible alternative to autotest)"
   s.description         = "Modern continuous testing (flexible alternative to autotest)."
   s.author              = "mynyml"
