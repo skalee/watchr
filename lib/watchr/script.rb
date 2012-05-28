@@ -43,6 +43,11 @@ module Watchr
       end
 
       # Delegated to script
+      def precedence(*args)
+        @__script.precedence(*args)
+      end
+
+      # Delegated to script
       def watch(*args, &block)
         @__script.watch(*args, &block)
       end
@@ -91,7 +96,7 @@ module Watchr
     #   opposite situation the last-matching rule is evaluated.  Defaults to
     #   `:last_match`.
     def precedence(precedence)
-      raise(ArgumentError, ":precedence must be one of those: :first_match, :last_match") unless [:last_match, :first_match].inlcude?(precedence)
+      raise(ArgumentError, ":precedence must be one of those: :first_match, :last_match") unless [:last_match, :first_match].include?(precedence)
       @precedence = precedence
     end
 
